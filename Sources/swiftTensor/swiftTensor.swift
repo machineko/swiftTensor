@@ -1,10 +1,13 @@
 import Foundation
+import Metal
+import MetalPerformanceShaders
 
-protocol CPUDatatTypes {}
 
-extension Float32: CPUDatatTypes {}
-@available(macOS 11.0, *)
-extension Float16: CPUDatatTypes {}
+public protocol CPUDatatType {}
+
+extension Float32: CPUDatatType {}
+extension Float64: CPUDatatType {}
+extension Int32: CPUDatatType {}
 
 public enum dataType {
     case float16, float32, bfloat16, float8
@@ -13,7 +16,7 @@ public enum dataType {
     case qint4, qint2, quint4, quint2
 }
 
-public enum backendType {
+public enum computeType {
     case metal, cpu, accelerate, cuda, mps
 }
 
@@ -22,28 +25,45 @@ public enum tensorOperations {
     case add
 }
 
-protocol tensorStorage: Hashable {
-    associatedtype Storage
+
+public struct CPUStorage<S: CPUDatatType> {
+    var gradient: UnsafeMutableBufferPointer<S>?
+    var data: UnsafeMutableBufferPointer<S>?
 }
 
-public struct CPU: tensorStorage {
-    typealias Storage = UnsafeMutableBufferPointer<CPUDatatTypes>
+public struct MetalStorage {
+    let device: MTLDevice
+    var gradient: MTLBuffer?
+    var data: MTLBuffer?
+    var commandQue: MTLCommandQueue
+    var commandBuffer: MPSCommandBuffer?
+    var commandEncoder: MTLComputeCommandEncoder?
+    var heap: MTLHeap
 }
 
-final class Tensor<S: tensorStorage>: Hashable {
-    let backend: backendType
-    var data: S.Storage? = nil
-    var gradient: S.Storage? = nil
+public protocol TenosrType: Hashable {
+    associatedtype StorageType
+}
+
+public struct CPU<S: CPUDatatType>: TenosrType {
+    public typealias StorageType = CPUStorage<S>
+}
+
+public struct Metal: TenosrType {
+    public typealias StorageType = MetalStorage
+}
+
+public final class Tensor<T: TenosrType>: Hashable {
+    var storage: T.StorageType
     let shape: [Int]
     let dataType: dataType
     var op: tensorOperations
     var requiresGradient: Bool
     var name: String? = nil
-    var childrens: [Tensor]
+    var childrens: [Tensor]? = nil
     
-    public init(backend: backendType, gradient: S.Storage, shape: [Int], dataType: dataType, requiresGradient: Bool, childrens: [Tensor], op: tensorOperations = .id, name: String? = nil) {
-        self.backend = backend
-        self.gradient = gradient
+    public init(storage: T.StorageType, shape: [Int], dataType: dataType, requiresGradient: Bool = false, childrens: [Tensor]?, op: tensorOperations = .id, name: String? = nil) {
+        self.storage = storage
         self.shape = shape
         self.dataType = dataType
         self.requiresGradient = requiresGradient
@@ -53,6 +73,7 @@ final class Tensor<S: tensorStorage>: Hashable {
     }
 }
 
+
 extension Tensor {
     public static func == (lhs: Tensor, rhs: Tensor) -> Bool {
         return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
@@ -61,4 +82,28 @@ extension Tensor {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
     }
+}
+
+extension Tensor {
+    @inline(__always)
+    func checkBinary(_ right: Tensor) {
+        precondition(self.dataType == right.dataType, "dtype didnt match")
+//        precondition(self.storage.data != nil && right.data != nil, "data didnt exists")
+    }
+}
+
+
+public extension CPUStorage<Float32> {
+    init(data: inout [Float32]) {
+        data.withUnsafeMutableBufferPointer {
+            self.data = $0
+        }
+    }
+}
+public extension Tensor {
+    
+    convenience init(storage: CPUStorage<Float>, shape: [Int], dataType: dataType, requiresGradient: Bool = false, childrens: [Tensor]?, op: tensorOperations = .id, name: String? = nil) {
+        
+    }
+    
 }
