@@ -37,6 +37,28 @@ public enum tensorOperations {
 //}
 //
 
+public protocol CPUDatatType {}
+
+extension Float32: CPUDatatType {}
+extension Float64: CPUDatatType {}
+extension Int32: CPUDatatType {}
+
+
+public struct CPUStorage<S: CPUDatatType> {
+   var gradient: Array<S>?
+   var data: Array<S>?
+}
+
+public struct CPU<S: CPUDatatType>: TenosrType {
+   public typealias StorageType = CPUStorage<S>
+}
+
+public extension Tensor {
+    var numberOfElements: Int {
+        shape.reduce(1, *)
+    }
+}
+
 public protocol TenosrType: Hashable {
     associatedtype StorageType
 }
