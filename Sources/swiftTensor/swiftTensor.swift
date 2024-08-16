@@ -18,7 +18,7 @@ public enum computeType {
 
 public enum tensorOperations {
     case noOP
-    case add
+    case add, subtract, multiply, divide, power, maximum, minimum, modulo
 }
 
 //public struct CPUStorage<S: CPUDatatType> {
@@ -53,15 +53,8 @@ public enum tensorOperations {
 //    public typealias StorageType = CPUStorage<S>
 // }
 
-public extension Tensor {
-    var numberOfElements: Int {
-        shape.reduce(1, *)
-    }
-}
 
-public protocol TenosrType: Hashable {
-    associatedtype StorageType
-}
+
 
 //public struct CPU<S: CPUDatatType>: TenosrType {
 //    public typealias StorageType = CPUStorage<S>
@@ -70,6 +63,9 @@ public protocol TenosrType: Hashable {
 //public struct Metal: TenosrType {
 //    public typealias StorageType = MetalStorage
 //}
+public protocol TenosrType: Hashable {
+    associatedtype StorageType
+}
 
 public final class Tensor<T: TenosrType>: Hashable {
     public var storage: T.StorageType
@@ -90,7 +86,11 @@ public final class Tensor<T: TenosrType>: Hashable {
         self.op = op
     }
 }
-
+public extension Tensor {
+    var numberOfElements: Int {
+        shape.reduce(1, *)
+    }
+}
 
 public extension Tensor {
     static func == (lhs: Tensor, rhs: Tensor) -> Bool {
