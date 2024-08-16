@@ -13,15 +13,15 @@ extension Optional where Wrapped == UnsafeMutableRawPointer {
         return self?.toArray(count: count)
     }
 }
-@Test func example() async throws {
-    var aData: [Float32] = [1,2]
-    var bData: [Float32] = [2,3]
-    var a = Tensor<CPU<Float32>>.init(storage: .init(data: &aData), shape: [2], dataType: .float32, requiresGradient: false, childrens: nil)
-    var b = Tensor<CPU<Float32>>.init(storage: .init(data: &bData), shape: [2], dataType: .float32, requiresGradient: false, childrens: nil)
-    let c = a + b
-    let result = Array(c.storage.data!)
-    print(result)
-}
+//@Test func example() async throws {
+//    var aData: [Float32] = [1,2]
+//    var bData: [Float32] = [2,3]
+//    var a = Tensor<CPU<Float32>>.init(storage: .init(data: &aData), shape: [2], dataType: .float32, requiresGradient: false, childrens: nil)
+//    var b = Tensor<CPU<Float32>>.init(storage: .init(data: &bData), shape: [2], dataType: .float32, requiresGradient: false, childrens: nil)
+//    let c = a + b
+//    let result = Array(c.storage.data!)
+//    print(result)
+//}
 
 
 // @Test func example() async throws {
