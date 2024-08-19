@@ -21,6 +21,7 @@ public enum tensorOperations {
     case add, subtract, multiply, divide
     case power, maximum, minimum, modulo
     case floor, rounded
+    case matMul
 }
 
 //public struct CPUStorage<S: CPUDatatType> {
@@ -70,25 +71,36 @@ public protocol TensorType {
 }
 
 public protocol ShapeType {
-    // associatedtype Dimmensions
     var shape: [Int] { get }
 }
 
-public struct Shape2D: ShapeType {
-
-    // public typealias Dimmensions = Int
-
-    public let shape: [Int]
-}
 public struct Shape1D: ShapeType {
-    // public typealias Dimmensions = Int
-
     public let shape: [Int]
+    public init(_ shape: [Int]) {
+        precondition(shape.count == 1, "1 Dimmension supported")
+        self.shape = shape
+    }
+}
+
+public struct Shape2D: ShapeType {
+    public let shape: [Int]
+    public init(_ shape: [Int]) {
+        precondition(shape.count == 2, "2 Dimmension supported")
+        self.shape = shape
+    }
+}
+
+public struct Shape3D: ShapeType {
+    public let shape: [Int]
+    public init(_ shape: [Int]) {
+        precondition(shape.count == 3, "3 Dimmension supported")
+        self.shape = shape
+    }
 }
 
 public typealias oneDim = Shape1D
-public typealias twoDim = Shape1D
-
+public typealias twoDim = Shape2D
+public typealias threeDim = Shape3D
 
 public final class Tensor<T: TensorType, S: ShapeType>: Hashable {
     public var storage: T.StorageType
