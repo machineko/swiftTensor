@@ -6,10 +6,10 @@ import MetalPerformanceShaders
 
 
 public enum dataType {
-    case float16, float32, bfloat16, float8
-    case int8, int16, int32
-    case uint8, uint16, uint32
-    case qint4, qint2, quint4, quint2
+    case float16, float32, bfloat16, float8, float64
+    case int8, int16, int32, int64
+    case uint8, uint16, uint32, uint64
+    // case qint4, qint2, quint4, quint2
 }
 
 public enum computeType {
@@ -18,7 +18,9 @@ public enum computeType {
 
 public enum tensorOperations {
     case noOP
-    case add, subtract, multiply, divide, power, maximum, minimum, modulo
+    case add, subtract, multiply, divide
+    case power, maximum, minimum, modulo
+    case floor, rounded
 }
 
 //public struct CPUStorage<S: CPUDatatType> {
@@ -63,20 +65,41 @@ public enum tensorOperations {
 //public struct Metal: TenosrType {
 //    public typealias StorageType = MetalStorage
 //}
-public protocol TenosrType: Hashable {
+public protocol TensorType {
     associatedtype StorageType
 }
 
-public final class Tensor<T: TenosrType>: Hashable {
-    public var storage: T.StorageType
+public protocol ShapeType {
+    // associatedtype Dimmensions
+    var shape: [Int] { get }
+}
+
+public struct Shape2D: ShapeType {
+
+    // public typealias Dimmensions = Int
+
     public let shape: [Int]
+}
+public struct Shape1D: ShapeType {
+    // public typealias Dimmensions = Int
+
+    public let shape: [Int]
+}
+
+public typealias oneDim = Shape1D
+public typealias twoDim = Shape1D
+
+
+public final class Tensor<T: TensorType, S: ShapeType>: Hashable {
+    public var storage: T.StorageType
+    public let shape: S
     public let dataType: dataType
     public var op: tensorOperations
     public var requiresGradient: Bool
     public var name: String? = nil
     public var childrens: [Tensor]? = nil
     
-    public init(storage: T.StorageType, shape: [Int], dataType: dataType, requiresGradient: Bool = false, childrens: [Tensor]?, op: tensorOperations = .noOP, name: String? = nil) {
+    public init(storage: T.StorageType, shape: S, dataType: dataType, requiresGradient: Bool = false, childrens: [Tensor]?, op: tensorOperations = .noOP, name: String? = nil) {
         self.storage = storage
         self.shape = shape
         self.dataType = dataType
@@ -88,7 +111,7 @@ public final class Tensor<T: TenosrType>: Hashable {
 }
 public extension Tensor {
     var numberOfElements: Int {
-        shape.reduce(1, *)
+        self.shape.shape.reduce(1, *)
     }
 }
 
@@ -102,11 +125,38 @@ public extension Tensor {
     }
 }
 
-public extension Tensor {
-    @inline(__always)
-    func checkBinary(_ right: Tensor) {
-        precondition(self.dataType == right.dataType, "dtype didnt match")
-//        precondition(self.storage.data != nil && right.data != nil, "data didnt exists")
+
+public extension dataType {
+    var byteSize: Int {
+        switch self {
+        case .float16:
+            return 2
+        case .float32:
+            return 4
+        case .bfloat16:
+            return 2
+        case .float8:
+            return 1
+        case .int8:
+            return 1
+        case .int16:
+            return 2
+        case .int32:
+            return 4
+        case .uint8:
+            return 1
+        case .uint16:
+            return 2
+        case .uint32:
+            return 4
+        case .float64:
+            return 8
+        case .int64:
+            return 8
+        case .uint64:
+            return 8
+
+}
     }
 }
 
@@ -118,3 +168,9 @@ public extension Tensor {
 //        }
 //    }
 //}
+
+public extension oneDim {
+    init(_ array: [any Numeric]) {
+        self.shape = [array.count]
+    }
+}
