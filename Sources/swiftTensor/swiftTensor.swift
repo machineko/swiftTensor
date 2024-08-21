@@ -370,13 +370,13 @@ public extension Tensor {
         case is (CPU.Type, fourDim.Type): return .cpu4D(self as! Tensor<CPU, fourDim>)
         case is (CPU.Type, fiveDim.Type): return .cpu5D(self as! Tensor<CPU, fiveDim>)
         #if canImport(MetalPerformanceShadersGraph)
-        case is (MPSGraph.Type, oneDim.Type): return .mps(self as! Tensor<MPGTensor, oneDim>)
-        case is (MPSGraph.Type, twoDim.Type): return .mps2D(self as! Tensor<MPGTensor, twoDim>)
-        case is (MPSGraph.Type, threeDim.Type): return .mps3D(self as! Tensor<MPGTensor, threeDim>)
-        case is (MPSGraph.Type, fourDim.Type): return .mps4D(self as! Tensor<MPGTensor, fourDim>)
-        case is (MPSGraph.Type, fiveDim.Type): return .mps5D(self as! Tensor<MPGTensor, fiveDim>)
+        case is (MPGTensor.Type, oneDim.Type): return .mps(self as! Tensor<MPGTensor, oneDim>)
+        case is (MPGTensor.Type, twoDim.Type): return .mps2D(self as! Tensor<MPGTensor, twoDim>)
+        case is (MPGTensor.Type, threeDim.Type): return .mps3D(self as! Tensor<MPGTensor, threeDim>)
+        case is (MPGTensor.Type, fourDim.Type): return .mps4D(self as! Tensor<MPGTensor, fourDim>)
+        case is (MPGTensor.Type, fiveDim.Type): return .mps5D(self as! Tensor<MPGTensor, fiveDim>)
         #endif
-        default: fatalError("Unsupported tensor type")
+        default: fatalError("Unsupported tensor type, \(T.self), \(S.self)")
         }
     }
 }
