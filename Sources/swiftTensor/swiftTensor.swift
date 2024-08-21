@@ -24,6 +24,8 @@ public enum tensorOperations {
     case floor, rounded
     case matMul
     case reshape
+    case mean, variance
+    case sqrt
 }
 
 
@@ -134,6 +136,7 @@ public final class MPGraphStorage {
             commandBuffer: parent.commandBuffer, commandEncoder: parent.commandEncoder, 
             exec: parent.exec, serialQue: parent.serialQue, heap: parent.heap)
     }
+
 }
 #endif
 
@@ -154,56 +157,13 @@ public enum RoundingRule {
     case down  // equivalent to .rounded(.down)
 }
 
-
-
-//public struct CPUStorage<S: CPUDatatType> {
-//    var gradient: Array<S>?
-//    var data: Array<S>?
-//}
-
-//public struct MetalStorage {
-//    let device: MTLDevice
-//    var gradient: MTLBuffer?
-//    var data: MTLBuffer?
-//    var commandQue: MTLCommandQueue
-//    var commandBuffer: MPSCommandBuffer?
-//    var commandEncoder: MTLComputeCommandEncoder?
-//    var heap: MTLHeap
-//}
-//
-
-// public protocol CPUDatatType {}
-
-// extension Float32: CPUDatatType {}
-// extension Float64: CPUDatatType {}
-// extension Int32: CPUDatatType {}
-
-
-// public struct CPUStorage<S: CPUDatatType> {
-//    var gradient: Array<S>?
-//    var data: Array<S>?
-// }
-
-// public struct CPU<S: CPUDatatType>: TenosrType {
-//    public typealias StorageType = CPUStorage<S>
-// }
-
-
-
-
-//public struct CPU<S: CPUDatatType>: TenosrType {
-//    public typealias StorageType = CPUStorage<S>
-//}
-//
-//public struct Metal: TenosrType {
-//    public typealias StorageType = MetalStorage
-//}
 public protocol TensorType {
     associatedtype StorageType
 }
 
 public protocol ShapeType {
     var shape: [Int] { get }
+    init(_ shape: [Int])
 }
 
 public struct Shape1D: ShapeType {
@@ -410,7 +370,6 @@ public extension Tensor {
         case is (CPU.Type, fourDim.Type): return .cpu4D(self as! Tensor<CPU, fourDim>)
         case is (CPU.Type, fiveDim.Type): return .cpu5D(self as! Tensor<CPU, fiveDim>)
         #if canImport(MetalPerformanceShadersGraph)
-
         case is (MPSGraph.Type, oneDim.Type): return .mps(self as! Tensor<MPGTensor, oneDim>)
         case is (MPSGraph.Type, twoDim.Type): return .mps2D(self as! Tensor<MPGTensor, twoDim>)
         case is (MPSGraph.Type, threeDim.Type): return .mps3D(self as! Tensor<MPGTensor, threeDim>)
