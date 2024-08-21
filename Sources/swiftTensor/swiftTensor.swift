@@ -1,5 +1,5 @@
 import Foundation
-#if canImport(MetalPerformanceShaders)
+#if canImport(MetalPerformanceShadersGraph)
 import MetalPerformanceShaders
 import MetalPerformanceShadersGraph
 #endif
@@ -35,10 +35,10 @@ extension Float64: CPUDataType {}
 extension Int32: CPUDataType {}
 
 public final class CPUStorage {
-    var gradient: UnsafeMutableRawBufferPointer?
-    var data: UnsafeMutableRawBufferPointer?
+    public var gradient: UnsafeMutableRawBufferPointer?
+    public var data: UnsafeMutableRawBufferPointer?
 
-    init(data: UnsafeMutableRawBufferPointer, gradient: UnsafeMutableRawBufferPointer? = nil) {
+    public init(data: UnsafeMutableRawBufferPointer, gradient: UnsafeMutableRawBufferPointer? = nil) {
         self.data = data
         self.gradient = gradient
     }
@@ -49,13 +49,13 @@ public final class CPUStorage {
     }
 
     // Convenience initializer for UnsafeMutableBufferPointer
-    convenience init<T>(data: UnsafeMutableBufferPointer<T>) where T: CPUDataType {
+    public convenience init<T>(data: UnsafeMutableBufferPointer<T>) where T: CPUDataType {
         let rawBuffer = UnsafeMutableRawBufferPointer(data)
         self.init(data: rawBuffer)
     }
 
     // Convenience initializer for Array
-    convenience init<T>(_ array: [T]) where T: CPUDataType {
+    public convenience init<T>(_ array: [T]) where T: CPUDataType {
         let count = array.count
         let byteCount = count * MemoryLayout<T>.stride
         let alignment = MemoryLayout<T>.alignment
@@ -83,7 +83,8 @@ extension Tensor {
         precondition(self.storage.data != nil && right.storage.data != nil, "data didnt exists")
     }
 }
-#if canImport(MetalPerformanceShaders)
+#if canImport(MetalPerformanceShadersGraph)
+
 public struct MPGTensor: TensorType {
     public typealias StorageType = MPGraphStorage
 }
@@ -136,7 +137,7 @@ public final class MPGraphStorage {
 }
 #endif
 
-extension UnsafeMutableRawBufferPointer {
+public extension UnsafeMutableRawBufferPointer {
     func toArray<T>(of type: T.Type) -> [T] where T: CPUDataType {
         precondition(self.count % MemoryLayout<T>.stride == 0, "Buffer size is not a multiple of the element size")
         let count = self.count / MemoryLayout<T>.stride
@@ -257,7 +258,8 @@ public enum AnyTensor {
     case cpu3D(Tensor<CPU, threeDim>)
     case cpu4D(Tensor<CPU, fourDim>)
     case cpu5D(Tensor<CPU, fiveDim>)
-    #if canImport(MetalPerformanceShaders)
+    #if canImport(MetalPerformanceShadersGraph)
+
     case mps(Tensor<MPGTensor, oneDim>)
     case mps2D(Tensor<MPGTensor, twoDim>)
     case mps3D(Tensor<MPGTensor, threeDim>)
@@ -271,7 +273,16 @@ public enum AnyTensor {
             case .cpu3D(let t): return t.shape.shape
             case .cpu4D(let t): return t.shape.shape
             case .cpu5D(let t): return t.shape.shape
-        }
+            
+            #if canImport(MetalPerformanceShadersGraph)
+            case .mps(let t):return t.shape.shape
+            case .mps2D(let t): return t.shape.shape
+            case .mps3D(let t) :return t.shape.shape
+            case .mps4D(let t): return t.shape.shape
+            case .mps5D(let t): return t.shape.shape
+            #endif
+
+            }
     }
 
     var dataType: dataType {
@@ -281,7 +292,8 @@ public enum AnyTensor {
         case .cpu3D(let t3D): return t3D.dataType
         case .cpu4D(let t4D): return t4D.dataType
         case .cpu5D(let t5D): return t5D.dataType
-        #if canImport(MetalPerformanceShaders)
+        #if canImport(MetalPerformanceShadersGraph)
+
         case .mps(let t1D): return t1D.dataType
         case .mps2D(let t2D): return t2D.dataType
         case .mps3D(let t3D): return t3D.dataType
@@ -397,7 +409,8 @@ public extension Tensor {
         case is (CPU.Type, threeDim.Type): return .cpu3D(self as! Tensor<CPU, threeDim>)
         case is (CPU.Type, fourDim.Type): return .cpu4D(self as! Tensor<CPU, fourDim>)
         case is (CPU.Type, fiveDim.Type): return .cpu5D(self as! Tensor<CPU, fiveDim>)
-        #if canImport(MetalPerformanceShaders)
+        #if canImport(MetalPerformanceShadersGraph)
+
         case is (MPSGraph.Type, oneDim.Type): return .mps(self as! Tensor<MPGTensor, oneDim>)
         case is (MPSGraph.Type, twoDim.Type): return .mps2D(self as! Tensor<MPGTensor, twoDim>)
         case is (MPSGraph.Type, threeDim.Type): return .mps3D(self as! Tensor<MPGTensor, threeDim>)
