@@ -174,7 +174,7 @@ public protocol ShapeType {
 public struct Shape1D: ShapeType {
     public let shape: [Int]
     public init(_ shape: [Int]) {
-        precondition(shape.count == 1, "1 Dimmension supported")
+        precondition(shape.count == 1, "1 Dimmension supported, passed = \(shape.count)")
         self.shape = shape
     }
 }
@@ -182,7 +182,7 @@ public struct Shape1D: ShapeType {
 public struct Shape2D: ShapeType {
     public let shape: [Int]
     public init(_ shape: [Int]) {
-        precondition(shape.count == 2, "2 Dimmension supported")
+        precondition(shape.count == 2, "2 Dimmension supported, passed = \(shape.count)")
         self.shape = shape
     }
 }
@@ -190,7 +190,7 @@ public struct Shape2D: ShapeType {
 public struct Shape3D: ShapeType {
     public let shape: [Int]
     public init(_ shape: [Int]) {
-        precondition(shape.count == 3, "3 Dimmension supported")
+        precondition(shape.count == 3, "3 Dimmension supported, passed = \(shape.count)")
         self.shape = shape
     }
 }
@@ -198,7 +198,7 @@ public struct Shape3D: ShapeType {
 public struct Shape4D: ShapeType {
     public let shape: [Int]
     public init(_ shape: [Int]) {
-        precondition(shape.count == 4, "4 Dimmension supported")
+        precondition(shape.count == 4, "4 Dimmension supported, passed = \(shape.count)")
         self.shape = shape
     }
 }
@@ -206,7 +206,7 @@ public struct Shape4D: ShapeType {
 public struct Shape5D: ShapeType {
     public let shape: [Int]
     public init(_ shape: [Int]) {
-        precondition(shape.count == 5, "5 Dimmension supported")
+        precondition(shape.count == 5, "5 Dimmension supported, passed = \(shape.count)")
         self.shape = shape
     }
 }
