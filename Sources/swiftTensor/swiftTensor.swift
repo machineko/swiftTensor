@@ -26,6 +26,7 @@ public enum tensorOperations {
     case reshape
     case mean, variance
     case sqrt
+    case conv2d
 }
 
 
@@ -158,6 +159,10 @@ public enum RoundingRule {
 }
 
 public protocol TensorType {
+    associatedtype StorageType
+}
+
+public protocol ConvStorage {
     associatedtype StorageType
 }
 
