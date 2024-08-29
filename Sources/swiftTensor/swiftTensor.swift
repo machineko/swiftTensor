@@ -23,10 +23,13 @@ public enum tensorOperations {
     case power, maximum, minimum, modulo
     case floor, rounded
     case matMul
-    case reshape
+    case reshape, permute
+    case gather, expandDim
     case mean, variance
     case sqrt
     case conv2d
+    case coordinate
+    case tile
 }
 
 
@@ -383,5 +386,11 @@ public extension Tensor {
         #endif
         default: fatalError("Unsupported tensor type, \(T.self), \(S.self)")
         }
+    }
+}
+
+public extension ShapeType {
+    var count: Int {
+        return self.shape.count
     }
 }
