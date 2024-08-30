@@ -20,16 +20,19 @@ public enum computeType {
 public enum tensorOperations {
     case noOP
     case add, subtract, multiply, divide
+    case equal, notEqual
     case power, maximum, minimum, modulo
     case floor, rounded
     case matMul
-    case reshape, permute
+    case reshape, permute, select, transpose
     case gather, expandDim
     case mean, variance
     case sqrt
     case conv2d
     case coordinate
     case tile
+    case softmax
+    case attention
 }
 
 
