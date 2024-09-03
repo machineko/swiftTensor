@@ -31,7 +31,7 @@ public enum tensorOperations {
     case conv2d
     case coordinate
     case tile
-    case softmax
+    case softmax, sigmoid
     case attention
 }
 
