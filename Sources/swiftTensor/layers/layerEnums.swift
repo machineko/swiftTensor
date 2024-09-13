@@ -1,15 +1,15 @@
-public enum padStyle {
+public enum padStyle: Sendable {
     case explicit, valid, same
 }
 
-public enum padMode {
+public enum padMode: Sendable {
     case zero, reflect, symmetric, clamp, const
 }
 
-public enum convDataLayout {
+public enum convDataLayout: Sendable {
     case NHWC, NCHW
 }
 
-public enum convWeightLayout {
+public enum convWeightLayout: Sendable {
     case OIHW, HWIO
 }

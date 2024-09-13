@@ -25,14 +25,21 @@ public enum tensorOperations {
     case floor, rounded
     case matMul
     case reshape, permute, select, transpose
+    case slice
     case gather, expandDim
     case mean, variance
     case sqrt
     case conv2d
     case coordinate
-    case tile
-    case softmax, sigmoid
+    case tile, broadcast
     case attention
+    case concatenate
+    case reciprocal
+    case clamp
+    case max, min
+    case resizeNearest, resizeBilinear
+    case softmax, sigmoid, tanh, gelu
+
 }
 
 
