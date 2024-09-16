@@ -39,7 +39,9 @@ public enum tensorOperations {
     case max, min
     case resizeNearest, resizeBilinear
     case softmax, sigmoid, tanh, gelu
-
+    case sin, cos
+    case exp
+    case pad
 }
 
 
