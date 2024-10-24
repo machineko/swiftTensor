@@ -42,6 +42,9 @@ public enum tensorOperations {
     case sin, cos
     case exp
     case pad
+    case normalize
+    case scaledDotProductAttention
+    case narrow
 }
 
 
