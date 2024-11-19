@@ -20,7 +20,7 @@ public enum computeType {
 public enum tensorOperations {
     case noOP
     case add, subtract, multiply, divide
-    case equal, notEqual
+    case equal, notEqual, greaterEqual, lessEqual
     case power, maximum, minimum, modulo
     case floor, rounded
     case matMul
@@ -256,7 +256,6 @@ public enum AnyTensor {
             case .cpu3D(let t): return t.shape.shape
             case .cpu4D(let t): return t.shape.shape
             case .cpu5D(let t): return t.shape.shape
-            
             #if canImport(MetalPerformanceShadersGraph)
             case .mps(let t):return t.shape.shape
             case .mps2D(let t): return t.shape.shape
@@ -270,19 +269,18 @@ public enum AnyTensor {
 
     var dataType: dataType {
         switch self {
-        case .cpu(let t1D): return t1D.dataType
-        case .cpu2D(let t2D): return t2D.dataType
-        case .cpu3D(let t3D): return t3D.dataType
-        case .cpu4D(let t4D): return t4D.dataType
-        case .cpu5D(let t5D): return t5D.dataType
-        #if canImport(MetalPerformanceShadersGraph)
-
-        case .mps(let t1D): return t1D.dataType
-        case .mps2D(let t2D): return t2D.dataType
-        case .mps3D(let t3D): return t3D.dataType
-        case .mps4D(let t4D): return t4D.dataType
-        case .mps5D(let t5D): return t5D.dataType
-        #endif
+            case .cpu(let t1D): return t1D.dataType
+            case .cpu2D(let t2D): return t2D.dataType
+            case .cpu3D(let t3D): return t3D.dataType
+            case .cpu4D(let t4D): return t4D.dataType
+            case .cpu5D(let t5D): return t5D.dataType
+            #if canImport(MetalPerformanceShadersGraph)
+            case .mps(let t1D): return t1D.dataType
+            case .mps2D(let t2D): return t2D.dataType
+            case .mps3D(let t3D): return t3D.dataType
+            case .mps4D(let t4D): return t4D.dataType
+            case .mps5D(let t5D): return t5D.dataType
+            #endif
         }
     }
 
@@ -292,7 +290,7 @@ public enum AnyTensor {
         default: return false
         }
     }
-    #if canImport(MPSGraph)
+    #if canImport(MetalPerformanceShadersGraph)
     var isMPSGraph: Bool {
         switch self {
         case .mps, .mps2D, .mps3D, .mps4D, .mps5D: return true
@@ -373,8 +371,7 @@ public extension dataType {
             return 8
         case .uint64:
             return 8
-
-}
+        }
     }
 }
 
