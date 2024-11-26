@@ -26,10 +26,10 @@ public enum tensorOperations {
     case matMul
     case reshape, permute, select, transpose
     case slice
-    case gather, expandDim
+    case gather, expandDim, scatter
     case mean, variance
     case sqrt
-    case conv2d
+    case conv2d, maxPool2d
     case coordinate
     case tile, broadcast
     case attention
@@ -45,6 +45,7 @@ public enum tensorOperations {
     case normalize
     case scaledDotProductAttention
     case narrow
+    case zeros
 }
 
 
