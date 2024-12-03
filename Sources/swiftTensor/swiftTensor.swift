@@ -20,7 +20,7 @@ public enum computeType {
 public enum tensorOperations {
     case noOP
     case add, subtract, multiply, divide
-    case equal, notEqual, greaterEqual, lessEqual
+    case equal, notEqual, greaterEqual, lessEqual, greater, less
     case power, maximum, minimum, modulo
     case floor, rounded
     case matMul
@@ -40,12 +40,13 @@ public enum tensorOperations {
     case resizeNearest, resizeBilinear
     case softmax, sigmoid, tanh, gelu, ReLU
     case sin, cos
-    case exp
+    case exp, pow
     case pad
     case normalize
     case scaledDotProductAttention
     case narrow
     case zeros
+    case ceil
 }
 
 
