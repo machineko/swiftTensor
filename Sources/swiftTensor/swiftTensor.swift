@@ -47,6 +47,7 @@ public enum tensorOperations {
     case narrow
     case zeros
     case ceil
+    case scatterND, scatterAlongAxis
 }
 
 
