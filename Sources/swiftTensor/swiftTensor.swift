@@ -27,7 +27,7 @@ public enum tensorOperations {
     case reshape, permute, select, transpose
     case slice
     case gather, expandDim, scatter
-    case mean, variance
+    case mean, variance, sum
     case sqrt, rsqrt
     case conv2d, maxPool2d
     case coordinate
