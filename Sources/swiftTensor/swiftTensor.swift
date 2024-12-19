@@ -46,6 +46,7 @@ public enum tensorOperations {
     case scaledDotProductAttention
     case narrow
     case zeros
+    case squeeze
     case ceil, argmax
     case scatterND, scatterAlongAxis
 }
