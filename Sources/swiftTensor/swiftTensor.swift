@@ -4,8 +4,6 @@ import MetalPerformanceShaders
 import MetalPerformanceShadersGraph
 #endif
 
-
-
 public enum dataType {
     case float16, float32, bfloat16, float8, float64
     case int8, int16, int32, int64
@@ -115,38 +113,65 @@ public struct MPGTensor: TensorType {
 }
 
 
+//public final class MPGraphStorage {
+//    public var data: MPSGraphTensor?
+//    public var gradient: MPSGraphTensor?
+//    public let device: MTLDevice
+//    public let commandQueue: MTLCommandQueue
+//    public var commandBuffer: MPSCommandBuffer?
+//    public var commandEncoder: MTLComputeCommandEncoder?
+//    public var exec: MPSGraphExecutable?
+//    public let serialQue: DispatchQueue?
+//    public var heap: MTLHeap?
+//
+//
+//    public init(
+//        data: MPSGraphTensor? = nil,
+//        gradient: MPSGraphTensor? = nil,
+//        device: MTLDevice,
+//        commandQueue: MTLCommandQueue,
+//        commandBuffer: MPSCommandBuffer? = nil,
+//        commandEncoder: MTLComputeCommandEncoder? = nil,
+//        exec: MPSGraphExecutable? = nil,
+//        serialQue: DispatchQueue? = nil,
+//        heap: MTLHeap? = nil
+//    ) {
+//        self.data = data
+//        self.gradient = gradient
+//        self.device = device
+//        self.commandQueue = commandQueue
+//        self.commandBuffer = commandBuffer
+//        self.commandEncoder = commandEncoder
+//        self.exec = exec
+//        self.serialQue = serialQue
+//        self.heap = heap
+//    }
+//
+//    public convenience init(
+//        data: MPSGraphTensor,
+//        gradient: MPSGraphTensor? = nil,
+//        parent: MPGraphStorage
+//    ) {
+//        self.init(
+//            data: data, gradient: gradient, device: parent.device, commandQueue: parent.commandQueue, 
+//            commandBuffer: parent.commandBuffer, commandEncoder: parent.commandEncoder, 
+//            exec: parent.exec, serialQue: parent.serialQue, heap: parent.heap)
+//    }
+//
+//}
 public final class MPGraphStorage {
     public var data: MPSGraphTensor?
     public var gradient: MPSGraphTensor?
-    public let device: MTLDevice
-    public let commandQueue: MTLCommandQueue
-    public var commandBuffer: MPSCommandBuffer?
-    public var commandEncoder: MTLComputeCommandEncoder?
-    public var exec: MPSGraphExecutable?
-    public let serialQue: DispatchQueue?
-    public var heap: MTLHeap?
 
 
     public init(
         data: MPSGraphTensor? = nil,
-        gradient: MPSGraphTensor? = nil,
-        device: MTLDevice,
-        commandQueue: MTLCommandQueue,
-        commandBuffer: MPSCommandBuffer? = nil,
-        commandEncoder: MTLComputeCommandEncoder? = nil,
-        exec: MPSGraphExecutable? = nil,
-        serialQue: DispatchQueue? = nil,
-        heap: MTLHeap? = nil
+        gradient: MPSGraphTensor? = nil
+      
     ) {
         self.data = data
         self.gradient = gradient
-        self.device = device
-        self.commandQueue = commandQueue
-        self.commandBuffer = commandBuffer
-        self.commandEncoder = commandEncoder
-        self.exec = exec
-        self.serialQue = serialQue
-        self.heap = heap
+
     }
 
     public convenience init(
@@ -155,12 +180,10 @@ public final class MPGraphStorage {
         parent: MPGraphStorage
     ) {
         self.init(
-            data: data, gradient: gradient, device: parent.device, commandQueue: parent.commandQueue, 
-            commandBuffer: parent.commandBuffer, commandEncoder: parent.commandEncoder, 
-            exec: parent.exec, serialQue: parent.serialQue, heap: parent.heap)
+            data: data, gradient: gradient)
     }
-
 }
+
 #endif
 
 public extension UnsafeMutableRawBufferPointer {
